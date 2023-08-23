@@ -2,7 +2,7 @@
 // import java.util.ArrayList;
 // import java.util.Collections;
 import java.util.*;
-
+//using arraylist data Structure
 public class ArrayListDs {
 
     // public static void swap(ArrayList<Integer> list, int idx1, int idx2) {
