@@ -60,33 +60,33 @@ public class BinayTreesB {
         // System.out.print(root.data + " ");
         // }
 
-        // public static void levelOrder(Node root) { // (NlogN)
-        // if (root == null) {
-        // return;
-        // }
-        // Queue<Node> q = new LinkedList<>();
-        // q.add(root);
-        // q.add(null);
-        // while (!q.isEmpty()) {
-        // Node currNode = q.remove();
-        // if (currNode == null) {
-        // System.out.println();
-        // if (q.isEmpty()) {
-        // break;
-        // } else {
-        // q.add(null);
-        // }
-        // } else {
-        // System.out.print(currNode.data + " ");
-        // if (currNode.left != null) {
-        // q.add(currNode.left);
-        // }
-        // if (currNode.right != null) {
-        // q.add(currNode.right);
-        // }
-        // }
-        // }
-        // }
+        public static void levelOrder(Node root) { // (NlogN)
+            if (root == null) {
+                return;
+            }
+            Queue<Node> q = new LinkedList<>();
+            q.add(root);
+            q.add(null);
+            while (!q.isEmpty()) {
+                Node currNode = q.remove();
+                if (currNode == null) {
+                    System.out.println();
+                    if (q.isEmpty()) {
+                        break;
+                    } else {
+                        q.add(null);
+                    }
+                } else {
+                    System.out.print(currNode.data + " ");
+                    if (currNode.left != null) {
+                        q.add(currNode.left);
+                    }
+                    if (currNode.right != null) {
+                        q.add(currNode.right);
+                    }
+                }
+            }
+        }
 
         // public static int height(Node root) { // O(N)
         // if (root == null) {
@@ -193,55 +193,105 @@ public class BinayTreesB {
         // }
     }
 
-    static class Info {
-        Node node;
-        int hd;
+    // static class Info {
+    // Node node;
+    // int hd;
 
-        public Info(Node node, int hd) {
-            this.node = node;
-            this.hd = hd;
+    // public Info(Node node, int hd) {
+    // this.node = node;
+    // this.hd = hd;
+    // }
+    // }
+
+    // public static void topView(Node root) {
+    // Queue<Info> q = new LinkedList<>();
+    // HashMap<Integer, Node> map = new HashMap();
+
+    // int min = 0, max = 0;
+    // q.add(new Info(root, 0));
+    // q.add(null);
+
+    // while (!q.isEmpty()) {
+    // Info curr = q.remove();
+    // if (curr == null) {
+    // if (q.isEmpty()) {
+    // break;
+    // } else {
+    // q.add(null);
+    // }
+    // } else {
+    // if (!map.containsKey(curr.hd)) { // 1st time hd occuring
+    // map.put(curr.hd, curr.node);
+    // }
+
+    // if (curr.node.left != null) {
+    // q.add(new Info(curr.node.left, curr.hd - 1));
+    // min = Math.min(min, curr.hd - 1);
+    // }
+
+    // if (curr.node.right != null) {
+    // q.add(new Info(curr.node.right, curr.hd + 1));
+    // max = Math.max(curr.hd + 1, max);
+    // }
+    // }
+
+    // }
+
+    // for (int i = min; i <= max; i++) {
+    // System.out.print(map.get(i).data + " ");
+    // }
+    // System.out.println();
+
+    // }
+
+    // kth level of a tree
+    public static void KLevel(Node root, int level, int k) {
+        if (root == null) {
+            return;
         }
+        if (level == k) {
+            System.out.print(root.data + " ");
+            return;
+        }
+        KLevel(root.left, level + 1, k);
+        KLevel(root.right, level + 1, k);
     }
 
-    public static void topView(Node root) {
-        Queue<Info> q = new LinkedList<>();
-        HashMap<Integer, Node> map = new HashMap();
+    public static boolean getPath(Node root, int n, ArrayList<Node> path) {
+        if (root == null) {
+            return false;
+        }
+        path.add(root);
 
-        int min = 0, max = 0;
-        q.add(new Info(root, 0));
-        q.add(null);
+        if (root.data == n) {
+            return true;
+        }
 
-        while (!q.isEmpty()) {
-            Info curr = q.remove();
-            if (curr == null) {
-                if (q.isEmpty()) {
-                    break;
-                } else {
-                    q.add(null);
-                }
-            } else {
-                if (!map.containsKey(curr.hd)) { // 1st time hd occuring
-                    map.put(curr.hd, curr.node);
-                }
+        boolean foundLeft = getPath(root.left, n, path);
+        boolean foundRight = getPath(root.right, n, path);
 
-                if (curr.node.left != null) {
-                    q.add(new Info(curr.node.left, curr.hd - 1));
-                    min = Math.min(min, curr.hd - 1);
-                }
+        if (foundLeft || foundRight) {
+            return true;
+        }
+        path.remove(path.size() - 1);
+        return false;
+    }
 
-                if (curr.node.right != null) {
-                    q.add(new Info(curr.node.right, curr.hd + 1));
-                    max = Math.max(curr.hd + 1, max);
-                }
+    public static Node lca(Node root, int n1, int n2) {
+        ArrayList<Node> path1 = new ArrayList<>();
+        ArrayList<Node> path2 = new ArrayList<>();
+
+        getPath(root, n1, path1);
+        getPath(root, n1, path2);
+
+        int i = 0;
+        for (; i < path1.size() && i < path2.size(); i++) {
+            if (path1.get(i) != path2.get(i)) {
+                break;
             }
-
         }
-
-        for (int i = min; i <= max; i++) {
-            System.out.print(map.get(i).data + " ");
-        }
-        System.out.println();
-
+        Node lca = path1.get(i - 1);
+        return lca;
     }
 
     public static void main(String[] args) {
@@ -249,7 +299,7 @@ public class BinayTreesB {
         BinayTree tree = new BinayTree();
         Node root = tree.buildTree(nodes);
         // System.out.println(root.data);
-        // tree.levelOrder(root);
+        tree.levelOrder(root);
         // System.out.println(tree.height(root));
         // System.out.println(tree.countNodes(root));
         // System.out.println(tree.sumOfNodes(root));
@@ -260,6 +310,11 @@ public class BinayTreesB {
         // subRoot.right = new Node(4);
 
         // System.out.println(isSubtree(root, subRoot));
-        topView(root);
+        // topView(root);
+        // int k = 2;
+        // KLevel(root, 1, 0);
+        int n1 = 4;
+        int n2 = 6;
+        System.out.println(lca(root, n1, n2).data);
     }
 }
